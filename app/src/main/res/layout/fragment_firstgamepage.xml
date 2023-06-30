@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".firstgamepage"
+    android:background="@color/officialfromis9">
+
+    <android.widget.Button
+        android:id="@+id/btnfisrt"
+        android:layout_width="250dp"
+        android:layout_height="80dp"
+        android:background="@drawable/roundbutton"
+        android:fontFamily="@font/dot"
+        android:text="게임 시작"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="55dp"/>
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="55dp"
+        android:layout_gravity="center|top"
+        android:src="@drawable/game1example" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/dot"
+        android:layout_marginTop="150dp"
+        android:text="제시어에 맞는 사진을 고르는 게임"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/dot"
+        android:layout_marginTop="200dp"
+        android:text="각 단계 제한 시간: 3초"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/tubeseoyeon"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="top|right"/>
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/jisun12"
+        android:layout_gravity="top|left"/>
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="55dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center|left"
+        android:src="@drawable/bbaggomnagyung" />
+
+</FrameLayout>

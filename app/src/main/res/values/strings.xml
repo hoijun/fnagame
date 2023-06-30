@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">fna</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <array name="fromis9" >
+        <item>@drawable/fna1</item>
+        <item>@drawable/fna2</item>
+        <item>@drawable/fna3</item>
+        <item>@drawable/fna4</item>
+        <item>@drawable/fna5</item>
+        <item>@drawable/fna6</item>
+        <item>@drawable/fna7</item>
+        <item>@drawable/fna8</item>
+        <item>@drawable/fna9</item>
+    </array>
+
+    <array name="saerom" >
+        <item>@drawable/saerom1</item>
+        <item>@drawable/saerom2</item>
+        <item>@drawable/saerom3</item>
+    </array>
+
+    <array name="gyuri" >
+        <item>@drawable/gyuri1</item>
+        <item>@drawable/gyuri2</item>
+        <item>@drawable/gyuri3</item>
+    </array>
+
+    <array name="hayoung" >
+        <item>@drawable/hayoung1</item>
+        <item>@drawable/hayoung2</item>
+        <item>@drawable/hayoung3</item>
+    </array>
+
+    <array name="jiwon" >
+        <item>@drawable/jiwon1</item>
+        <item>@drawable/jiwon2</item>
+        <item>@drawable/jiwon3</item>
+    </array>
+
+    <array name="jisun" >
+        <item>@drawable/jisun1</item>
+        <item>@drawable/jisun2</item>
+        <item>@drawable/jisun3</item>
+    </array>
+
+    <array name="seoyeon" >
+        <item>@drawable/seoyeon1</item>
+        <item>@drawable/seoyeon2</item>
+        <item>@drawable/seoyeon3</item>
+    </array>
+
+    <array name="chaeyoung" >
+        <item>@drawable/chaeyoung1</item>
+        <item>@drawable/chaeyoung2</item>
+        <item>@drawable/chaeyoung3</item>
+    </array>
+
+    <array name="nagyung" >
+        <item>@drawable/nagyung1</item>
+        <item>@drawable/nagyung2</item>
+        <item>@drawable/nagyung3</item>
+    </array>
+
+    <array name="jiheon" >
+        <item>@drawable/jiheon1</item>
+        <item>@drawable/jiheon2</item>
+        <item>@drawable/jiheon3</item>
+    </array>
+</resources>

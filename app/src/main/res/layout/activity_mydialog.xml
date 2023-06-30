@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".mydialog"
+    android:background="@drawable/dialog_radius"
+    android:layout_gravity="center"
+    android:paddingHorizontal="50dp"
+    android:paddingVertical="10dp">
+
+    <TextView
+        android:id="@+id/solvedquiztext"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/dot"
+        android:text="현재 맞춘 문제: 0"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/haflover_gif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@raw/lowflover"/>
+
+    <TextView
+        android:id="@+id/endgame"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:fontFamily="@font/dot"
+        android:text="게임을 종료 할까요?"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <android.widget.Button
+            android:id="@+id/btnyes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundbutton"
+            android:fontFamily="@font/dot"
+            android:text="예"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <android.widget.Button
+            android:id="@+id/btnno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/roundbutton"
+            android:fontFamily="@font/dot"
+            android:text="아니오"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+    </LinearLayout>
+</LinearLayout>
