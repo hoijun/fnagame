@@ -19,30 +19,42 @@ import java.util.*
 
 class mydialog2(context: Context, reason: String) : Dialog(context) {
     private lateinit var binding: ActivityMydialog2Binding
-    private var endreason = reason
+    private var endreason = reason // 오답
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMydialog2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 다이얼로그 배경 투명
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        // 다이얼로그 크기 조절
         window!!.setLayout(1250, LayoutParams.WRAP_CONTENT)
+
+        // imageview에 gif 파일 적용
         Glide.with(this.context).load(R.raw.cromsae).into(binding.cromsaeGif)
-        binding.solvedquiztext.text = "맞춘 문제: $solvequiznum"
-        binding.endreason.text = endreason
+
+        binding.solvedquiztext.text = "맞춘 문제: ${game1().getsolvenum()}"
+
+        binding.endreason.text = endreason // 오답
+
         binding.btnregame.setOnClickListener{
-            solvequiznum = 0
+            game1().setsolvenum(0)
             val intent = Intent(this.context, game1::class.java)
             this.context.startActivity(intent) // 게임 재시작
         }
+
         binding.btnend.setOnClickListener {
-            solvequiznum = 0
+            game1().setsolvenum(0)
             val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택창으로 이동
         }
     }
+
     override fun onBackPressed() {
         return
     }
+
     override fun show() {
         super.show()
         this.setCancelable(false)

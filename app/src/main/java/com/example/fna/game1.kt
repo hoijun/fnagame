@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
+import android.os.Looper
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.fna.databinding.ActivityGame1Binding
@@ -13,13 +14,9 @@ import com.example.fna.fnagamematerials.Companion.fnakeywords
 import java.util.*
 import kotlin.concurrent.timer
 
-@SuppressLint("StaticFieldLeak")
 private lateinit var binding: ActivityGame1Binding
-lateinit var mtimer : Timer
-private var backPressedTime : Long = 0
-var defaultsecond = 5
-var nowsecond = 0
-var solvequiznum = 0
+private var game1timer = timer()
+private var solvequiznum = 0
 
 class game1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +24,12 @@ class game1 : AppCompatActivity() {
         setContentView(R.layout.activity_game1)
         binding = ActivityGame1Binding.inflate(layoutInflater)
         setContentView(binding.root)
+        gaming() // 게임 시작
+    }
+    
+    // 게임 로직
+    private fun gaming() {
         Glide.with(this).load(R.raw.dancinbbang).into(binding.dancebbang)
-
         val fnamemimages = arrayOf(
             resources.obtainTypedArray(R.array.saerom),
             resources.obtainTypedArray(R.array.gyuri),
@@ -42,22 +43,17 @@ class game1 : AppCompatActivity() {
         )
 
         binding.solvedquiz.text = "맞힌 문제: $solvequiznum"
-        // 타이머 시작 시간
-        defaultsecond = 3
-        // 타이머 시작
+
+        game1timer.setdefaultsecond(3)
         funTimer(0, this)
 
-        var randomkeysindex = mutableListOf<Int>()
-        randomkeysindex = getrandomnodup(randomkeysindex, 3, 8)
-
-        var randomimagesindex = mutableListOf<Int>()
-        randomimagesindex = getrandomdup(randomimagesindex, 3, 2)
+        val randomkeysindex = getrandomnodup(mutableListOf(), 3, 8)
+        val randomimagesindex = getrandomdup(mutableListOf(), 3, 2)
 
         val randommemnameindex = (0..3).random()
+        val fakerandommemnameindex = (0..3).random()
 
-        val imageViewarray = arrayOf(binding.imageView1, binding.imageView2, binding.imageView3)
-        var randomimageviewarrayindex = mutableListOf<Int>()
-        randomimageviewarrayindex = getrandomnodup(randomimageviewarrayindex, 3, 2)
+        val randomimageviewarrayindex = getrandomnodup(mutableListOf(), 3, 2)
 
         // 배열로 부터 키워드를 가져와 키워드 텍스트뷰에 적용
         val key = fnainfo(fnakeywords[randomkeysindex[0]], fnamemimages[randomkeysindex[0]])
@@ -65,20 +61,17 @@ class game1 : AppCompatActivity() {
         val fake2 = fnainfo(fnakeywords[randomkeysindex[2]], fnamemimages[randomkeysindex[2]])
 
         binding.keyword.text = key.getkeyword(randommemnameindex)
-        imageViewarray[randomimageviewarrayindex[0]].setImageDrawable(key.getimage(randomimagesindex[0]))
-        imageViewarray[randomimageviewarrayindex[1]].setImageDrawable(
-            fake1.getimage(
-                randomimagesindex[1]
-            )
-        )
-        imageViewarray[randomimageviewarrayindex[2]].setImageDrawable(
-            fake2.getimage(
-                randomimagesindex[2]
-            )
-        )
+        val imageViewarray = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
+        setimageviewindex(imageViewarray, randomimageviewarrayindex, randomimagesindex, listOf(key, fake1, fake2))
 
-        if(solvequiznum > 0 && solvequiznum % 10 == 0){
-            Handler().postDelayed({
+        if(solvequiznum in 1..10 && solvequiznum % 10 == 0){
+            binding.keyword.text = fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(fakerandommemnameindex)
+        }
+
+        if(solvequiznum in 11..30 && solvequiznum % 10 == 0){
+            if (solvequiznum > 20)
+                binding.keyword.text = fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(fakerandommemnameindex)
+            Handler(Looper.getMainLooper()).postDelayed({
                 Glide.with(this).load(R.raw.itsme).into(imageViewarray[0])
                 Glide.with(this).load(R.raw.itsme).into(imageViewarray[1])
                 Glide.with(this).load(R.raw.itsme).into(imageViewarray[2])
@@ -86,63 +79,53 @@ class game1 : AppCompatActivity() {
         }
 
         imageViewarray[randomimageviewarrayindex[0]].setOnClickListener {
-            mtimer.cancel()
-            solvequiznum++
-            val intent = Intent(this, game1::class.java)
-            startActivity(intent)
-            overridePendingTransition(0, 0);
+            onCorrectImageClick()
+        }
 
-        }
         imageViewarray[randomimageviewarrayindex[1]].setOnClickListener {
-            mtimer.cancel()
-            val customdialog2 = mydialog2(this,"오답!")
-            customdialog2.show()
+            onWrongImageClick()
         }
+
         imageViewarray[randomimageviewarrayindex[2]].setOnClickListener {
-            mtimer.cancel()
-            val customdialog2 = mydialog2(this, "오답!")
-            customdialog2.show()
+            onWrongImageClick()
         }
 
         binding.btnquitgame.setOnClickListener {
-            nowsecond = defaultsecond // 타이머 남은 시간 저장
-            mtimer.cancel() // 타이머 중지
-            val customdialog = mydialog(this)
-            customdialog.show() // 다이얼로그 실행
+            onQuitGameClick()
         }
 
     }
+    
+    // 이미지뷰에 이미지 할당
+    private fun setimageviewindex(imageViewList:List<ImageView>, imagearrayIndexList:List<Int>, imageIndexList:List<Int>, infolist : List<fnainfo>) {
+        for(i in imageViewList.indices) {
+            imageViewList[imagearrayIndexList[i]].setImageDrawable(infolist[i].getimage(imageIndexList[i]))
+        }
+    }
 
-    // 종료 버튼이랑 동일
-    override fun onBackPressed() {
-        nowsecond = defaultsecond
-        mtimer.cancel()
+    private fun onCorrectImageClick() {
+        game1timer.gettimer().cancel()
+        solvequiznum++
+        val intent = Intent(this, game1::class.java)
+        startActivity(intent)
+        overridePendingTransition(0, 0);
+    }
+
+    private fun onWrongImageClick() {
+        game1timer.gettimer().cancel()
+        val customdialog2 = mydialog2(this,"오답!")
+        customdialog2.show()
+    }
+
+    private fun onQuitGameClick() {
+        game1timer.setnowsecond(
+            game1timer.getdefaultsecond()) // 타이머 남은 시간 저장
+        game1timer.gettimer().cancel() // 타이머 중지
         val customdialog = mydialog(this)
-        customdialog.show()
+        customdialog.show() // 다이얼로그 실행
     }
 
-    @SuppressLint("SetTextI18n")
-    // 타이머 동작
-    fun funTimer(delay: Long, acti: Context) {
-        mtimer = timer(initialDelay = delay, period = 1000) {
-            runOnUiThread {
-                // 시간이 0이되면 타이머 중지하고 다이얼로그 실행
-                if (defaultsecond == 0) {
-                    mtimer.cancel()
-                    val customdialog2 = mydialog2(acti, "시간 종료!")
-                    customdialog2.show()
-                    binding.texttimer.text = "시간: 0"
-                }
-                else {
-                    // 시간을 1초씩 줄임
-                    binding.texttimer.text = "시간: $defaultsecond"
-                    defaultsecond--
-                }
-            }
-        }
-    }
-
-    fun getrandomnodup(list: MutableList<Int>, size: Int, range: Int): MutableList<Int> {
+    private fun getrandomnodup(list: MutableList<Int>, size: Int, range: Int): MutableList<Int> {
         while (list.size < size) {
             val tempint = (0..range).random()
             if (list.contains(tempint))
@@ -152,9 +135,50 @@ class game1 : AppCompatActivity() {
         return list
     }
 
-    fun getrandomdup(list: MutableList<Int>, size: Int, range: Int): MutableList<Int> {
+    private fun getrandomdup(list: MutableList<Int>, size: Int, range: Int): MutableList<Int> {
         for (i: Int in 0 until size)
             list.add((0..range).random())
         return list
+    }
+
+    // 종료 버튼이랑 동일
+    override fun onBackPressed() {
+        game1timer.setnowsecond(
+            game1timer.getdefaultsecond())
+        game1timer.gettimer().cancel()
+        val customdialog = mydialog(this)
+        customdialog.show()
+    }
+
+    fun getgame1timer(): timer {
+        return game1timer
+    }
+
+    fun getsolvenum(): Int {
+        return solvequiznum
+    }
+
+    fun setsolvenum(num: Int){
+        solvequiznum = num
+    }
+
+    // 타이머 동작
+     fun funTimer(delay: Long, acti: Context) {
+        game1timer.settimer(timer(initialDelay = delay, period = 1000) {
+            runOnUiThread {
+                // 시간이 0이되면 타이머 중지하고 다이얼로그 실행
+                if (game1timer.getdefaultsecond() == 0) {
+                    game1timer.gettimer().cancel()
+                    val customdialog2 = mydialog2(acti, "시간 종료!")
+                    customdialog2.show()
+                    binding.texttimer.text = "시간: 0"
+                }
+                else {
+                    // 시간을 1초씩 줄임
+                    binding.texttimer.text = "시간: ${game1timer.getdefaultsecond()}"
+                    game1timer.decsecond()
+                }
+            }
+        })
     }
 }

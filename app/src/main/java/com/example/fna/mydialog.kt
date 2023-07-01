@@ -17,6 +17,7 @@ import com.example.fna.databinding.ActivityMydialogBinding
 import java.util.*
 import kotlin.concurrent.timer
 
+
 class mydialog(context: Context) : Dialog(context) {
     private lateinit var binding: ActivityMydialogBinding
 
@@ -24,29 +25,37 @@ class mydialog(context: Context) : Dialog(context) {
         super.onCreate(savedInstanceState)
         binding = ActivityMydialogBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // 다이얼로그 배경 투명
         window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         // 다이얼로그 크기 조절
         window!!.setLayout(1250, LayoutParams.WRAP_CONTENT)
-        binding.solvedquiztext.text = "맞춘 문제: $solvequiznum"
+
+        binding.solvedquiztext.text = "맞춘 문제: ${game1().getsolvenum()}"
+
         // imageview에 gif 파일 적용
         Glide.with(this.context).load(R.raw.lowflover).into(binding.hafloverGif)
+
         binding.btnyes.setOnClickListener{
-            mtimer.cancel() // 타이머 중지
-            solvequiznum = 0
+            game1().getgame1timer().gettimer().cancel() // 타이머 중지
+            game1().setsolvenum(0)
             val intent = Intent(this.context, mainchange::class.java) 
             this.context.startActivity(intent) // 게임 선택 창으로 이동
         }
+
         binding.btnno.setOnClickListener {
             dismiss() // 다이얼로그 닫음
-            defaultsecond = nowsecond // 타이머의 남은 시간 저장
-            mtimer.cancel() // 타이머 중지
+            game1().getgame1timer().setdefaultsecond(game1().getgame1timer().getnowsecond())// 타이머의 남은 시간 저장
+            game1().getgame1timer().gettimer().cancel() // 타이머 중지
             game1().funTimer(500, this.context) // 저장한 남은 시간으로 다시 타이머 시작
         }
     }
+
     override fun onBackPressed() {
         return
     }
+
     override fun show() {
         super.show()
         this.setCancelable(false)
