@@ -1,5 +1,6 @@
 package com.example.fna
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,7 +32,9 @@ class mainchange : AppCompatActivity() {
 
     //뒤로가기 버튼 누르면 처음화면으로
     override fun onBackPressed() {
+        val songnumber = intent.getIntExtra("song", 0)
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("resong", songnumber)
         startActivity(intent)
     }
 }

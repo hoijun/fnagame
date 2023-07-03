@@ -100,6 +100,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageButton
+            android:id="@+id/previoussong"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/previous"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageButton
+            android:id="@+id/nextsong"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="220dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/next"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:srcCompat="@tools:sample/avatars" />
+
         <TextView
             android:id="@+id/fnagame"
             android:layout_width="300dp"
@@ -138,6 +166,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
+
+        <ImageButton
+            android:id="@+id/stopplaysong"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/stop"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="180dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/transparent"
+            tools:ignore="MissingConstraints"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/presentsong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="270dp"
+            android:fontFamily="@font/dot"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
