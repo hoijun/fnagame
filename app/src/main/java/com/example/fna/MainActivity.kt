@@ -1,7 +1,6 @@
 package com.example.fna
 
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,12 +12,9 @@ import java.lang.reflect.Field
 
 class MainActivity () : AppCompatActivity() {
     private lateinit var binding:ActivityMainBinding
-    private lateinit var mediaPlayer: MediaPlayer
-    private var ismediaplayerpaused = false
     private var backPressedTime : Long = 0
     private val songlist: Array<out Field> = R.raw::class.java.fields
-    private var number = 0
-    private var nextclick = true
+    private var music = Music(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,27 +28,32 @@ class MainActivity () : AppCompatActivity() {
         binding.fnalogo.setOnClickListener {
             YoYo.with(Techniques.Swing).duration(800).repeat(1).playOn(binding.fnalogo)
         }
-        number = (songlist.indices).random()
 
-        runsong(number)
+        val number = (songlist.indices).random()
+
+        music.runsong(number)
+
+        binding.presentsong.text = music.getsongname()
 
         binding.nextsong.setOnClickListener{
-            nextsong()
+            music.nextsong()
+            binding.presentsong.text = music.getsongname()
             binding.stopplaysong.setImageResource(R.drawable.stop)
         }
 
         binding.previoussong.setOnClickListener {
-            previousong()
+            music.previousong()
+            binding.presentsong.text = music.getsongname()
             binding.stopplaysong.setImageResource(R.drawable.stop)
         }
 
         binding.stopplaysong.setOnClickListener {
-            if (!ismediaplayerpaused) {
+            if (!music.getismediaplayerpaused()) {
                 binding.stopplaysong.setImageResource(R.drawable.play)
                 onPause()
             }
 
-            else if (ismediaplayerpaused) {
+            else if (music.getismediaplayerpaused()) {
                 binding.stopplaysong.setImageResource(R.drawable.stop)
                 onResume()
             }
@@ -66,53 +67,6 @@ class MainActivity () : AppCompatActivity() {
         }
     }
 
-    private fun runsong(number : Int) {
-        var n = number
-        while (MediaPlayer.create(this, songlist[n].getInt(songlist[n])) == null && nextclick) {
-            n += 1
-        }
-        while (MediaPlayer.create(this, songlist[n].getInt(songlist[n])) == null && !nextclick) {
-            n -= 1
-        }
-        mediaPlayer = MediaPlayer.create(this, songlist[n].getInt(songlist[n]))
-        mediaPlayer.isLooping = false
-        mediaPlayer.start()
-
-        mediaPlayer.setOnCompletionListener {
-            nextsong()
-        }
-        
-        binding.presentsong.text = songlist[n].name + ".."
-        this.number = n
-    }
-
-    private fun nextsong() {
-        nextclick = true
-        mediaPlayer.stop()
-        if (number == songlist.size - 1) {
-            number = 0
-            runsong(number)
-        }
-        else {
-            number += 1
-            runsong(number)
-        }
-        ismediaplayerpaused = false
-    }
-
-    private fun previousong() {
-        nextclick = false
-        mediaPlayer.stop()
-        if (number == 0) {
-            number = songlist.size - 1
-            runsong(number)
-        }
-        else {
-            number -= 1
-            runsong(number)
-        }
-        ismediaplayerpaused = false
-    }
     override fun onBackPressed() {
         //2.5초이내에 한 번 더 뒤로가기 클릭 시
         if (System.currentTimeMillis() - backPressedTime < 2500) {
@@ -125,25 +79,26 @@ class MainActivity () : AppCompatActivity() {
         backPressedTime = System.currentTimeMillis()
     }
 
+
     override fun onPause() {
         super.onPause()
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            ismediaplayerpaused = true
+        if (music.getplayer().isPlaying) {
+            music.getplayer().pause();
+            music.setismediaplayerpaused(true)
         }
     }
 
     override fun onResume(){
         super.onResume()
-        if (ismediaplayerpaused) {
-            mediaPlayer.start();
-            ismediaplayerpaused = false;
+        if (music.getismediaplayerpaused()) {
+            music.getplayer().start();
+            music.setismediaplayerpaused(false)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        music.getplayer().stop();
+        music.getplayer().release();
     }
 }

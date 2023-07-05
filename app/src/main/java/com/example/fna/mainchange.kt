@@ -1,6 +1,5 @@
 package com.example.fna
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,9 +7,12 @@ import android.widget.TableLayout
 import androidx.fragment.app.FragmentActivity
 import com.example.fna.databinding.ActivityMainchangeBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import java.lang.reflect.Field
 
 class mainchange : AppCompatActivity() {
     private lateinit var binding: ActivityMainchangeBinding
+    private val songlist: Array<out Field> = R.raw::class.java.fields
+    private var music = Music(this)
 
     // 탭 레이아웃 항목 이름
     private val tabTextList = listOf("그림 맞추기", "짝 맞추기")
@@ -18,6 +20,9 @@ class mainchange : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainchangeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val number = (songlist.indices).random()
+        music.runsong(number)
 
         // 뷰페이저에 프래그먼트 연결?
         binding.viewPager01.apply {
@@ -36,5 +41,27 @@ class mainchange : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("resong", songnumber)
         startActivity(intent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (music.getplayer().isPlaying) {
+            music.getplayer().pause();
+            music.setismediaplayerpaused(true)
+        }
+    }
+
+    override fun onResume(){
+        super.onResume()
+        if (music.getismediaplayerpaused()) {
+            music.getplayer().start();
+            music.setismediaplayerpaused(false)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        music.getplayer().stop();
+        music.getplayer().release();
     }
 }

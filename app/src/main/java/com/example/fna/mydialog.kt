@@ -39,7 +39,6 @@ class mydialog(context: Context) : Dialog(context) {
 
         binding.btnyes.setOnClickListener{
             game1().getgame1timer().gettimer().cancel() // 타이머 중지
-            game1().setsolvenum(0)
             val intent = Intent(this.context, mainchange::class.java) 
             this.context.startActivity(intent) // 게임 선택 창으로 이동
         }

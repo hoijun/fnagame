@@ -11,25 +11,33 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.fna.databinding.ActivityGame1Binding
 import com.example.fna.fnagamematerials.Companion.fnakeywords
+import java.lang.reflect.Field
 import java.util.*
 import kotlin.concurrent.timer
 
-private lateinit var binding: ActivityGame1Binding
 private var game1timer = timer()
-private var solvequiznum = 0
 
 class game1 : AppCompatActivity() {
+    private val songlist: Array<out Field> = R.raw::class.java.fields
+    private var music = Music(this)
+    private var solvequiznum = 0
+    private lateinit var binding: ActivityGame1Binding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game1)
         binding = ActivityGame1Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Glide.with(this).load(R.raw.dancinbbang).into(binding.dancebbang)
+        val number = (songlist.indices).random()
+        music.runsong(number)
+
         gaming() // 게임 시작
     }
     
     // 게임 로직
     private fun gaming() {
-        Glide.with(this).load(R.raw.dancinbbang).into(binding.dancebbang)
         val fnamemimages = arrayOf(
             resources.obtainTypedArray(R.array.saerom),
             resources.obtainTypedArray(R.array.gyuri),
@@ -106,9 +114,7 @@ class game1 : AppCompatActivity() {
     private fun onCorrectImageClick() {
         game1timer.gettimer().cancel()
         solvequiznum++
-        val intent = Intent(this, game1::class.java)
-        startActivity(intent)
-        overridePendingTransition(0, 0);
+        gaming()
     }
 
     private fun onWrongImageClick() {
@@ -158,8 +164,26 @@ class game1 : AppCompatActivity() {
         return solvequiznum
     }
 
-    fun setsolvenum(num: Int){
-        solvequiznum = num
+    override fun onPause() {
+        super.onPause()
+        if (music.getplayer().isPlaying) {
+            music.getplayer().pause();
+            music.setismediaplayerpaused(true)
+        }
+    }
+
+    override fun onResume(){
+        super.onResume()
+        if (music.getismediaplayerpaused()) {
+            music.getplayer().start();
+            music.setismediaplayerpaused(false)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        music.getplayer().stop();
+        music.getplayer().release();
     }
 
     // 타이머 동작
