@@ -16,12 +16,12 @@ import java.util.*
 import kotlin.concurrent.timer
 
 private var game1timer = timer()
+private lateinit var binding: ActivityGame1Binding
 
 class game1 : AppCompatActivity() {
     private val songlist: Array<out Field> = R.raw::class.java.fields
     private var music = Music(this)
     private var solvequiznum = 0
-    private lateinit var binding: ActivityGame1Binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
