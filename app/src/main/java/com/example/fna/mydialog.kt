@@ -38,8 +38,9 @@ class mydialog(context: Context) : Dialog(context) {
         Glide.with(this.context).load(R.raw.lowflover).into(binding.hafloverGif)
 
         binding.btnyes.setOnClickListener{
-            game1().getgame1timer().gettimer().cancel() // 타이머 중지
-            val intent = Intent(this.context, mainchange::class.java) 
+            dismiss()
+            game1().getgame1timer().gettimer().cancel()
+            val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택 창으로 이동
         }
 

@@ -39,11 +39,15 @@ class mydialog2(context: Context, reason: String) : Dialog(context) {
         binding.endreason.text = endreason // 오답
 
         binding.btnregame.setOnClickListener{
+            dismiss()
+            game1().getgame1timer().gettimer().cancel()
             val intent = Intent(this.context, game1::class.java)
             this.context.startActivity(intent) // 게임 재시작
         }
 
         binding.btnend.setOnClickListener {
+            dismiss()
+            game1().getgame1timer().gettimer().cancel()
             val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택창으로 이동
         }
