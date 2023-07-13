@@ -194,6 +194,8 @@ class game1 : AppCompatActivity() {
     }
 
     override fun onPause() {
+        binding.imageView1.translationX = x
+        binding.imageView1.translationY = y
         super.onPause()
         if (ismoving1) {
             ismoving1 = false
@@ -327,6 +329,7 @@ class game1 : AppCompatActivity() {
             } else
                 newTop += oriy
         }
+
         when (imageView) {
             binding.imageView1 -> {
                 ori1x = orix
@@ -357,16 +360,13 @@ class game1 : AppCompatActivity() {
         return listOf(false) // 충돌 없음
     }
 
-    // ImageView의 경계를 반환하는 확장 함수
     private fun ImageView.getBounds(): Rect {
         val rect = Rect()
         getDrawingRect(rect)
         rect.offset(left, top)
         return rect
     }
-
-
-
+    
     // 타이머 동작
      fun funTimer(delay: Long, acti: Context) {
         game1timer.settimer(timer(initialDelay = delay, period = 1000) {
