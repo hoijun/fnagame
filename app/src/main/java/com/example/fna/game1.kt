@@ -287,34 +287,46 @@ class game1 : AppCompatActivity() {
         val ran2 = Random(seed).nextInt(1..2)
         val collisionlist = checkCollision(imageView)
         val check = collisionlist[0] as Boolean
+        var collsiontop: Boolean
+        var collsionleft: Boolean
         if (check) {
+            collsiontop = false
+            collsionleft = false
             val other = collisionlist[1] as ImageView
+
             if (abs(imageView.bottom - other.top) < 15 || abs(imageView.top - other.bottom) < 15)
+                collsiontop = true
+            if (abs(imageView.left - other.right) < 15 || abs(imageView.right - other.left) < 15)
+                collsionleft = true
+
+            if (collsiontop && collsionleft || !collsiontop && !collsionleft)
+            else if (collsiontop)
                 oriy *= -1
-            else if (abs(imageView.left - other.right) < 15 || abs(imageView.right - other.left) < 15)
+            else if (collsionleft)
                 orix *= -1
-        }
-
-        if (currentLeft <= 0) {
-            orix *= -1
-            newLeft += orix + ran
-        } else if (currentLeft >= rightBoundary) {
-            orix *= -1
-            newLeft += orix - ran
-        }
-        else
             newLeft += orix
-
-        if (currentTop <= 0) {
-            oriy *= -1
-            newTop += oriy + ran
-        } else if(currentTop >= bottomBoundary) {
-            oriy *= -1
-            newTop += oriy - ran
-        }
-        else
             newTop += oriy
+        }
 
+        if (!check) {
+            if (currentLeft <= 0) {
+                orix *= -1
+                newLeft += orix + ran
+            } else if (currentLeft >= rightBoundary) {
+                orix *= -1
+                newLeft += orix - ran
+            } else
+                newLeft += orix
+
+            if (currentTop <= 0) {
+                oriy *= -1
+                newTop += oriy + ran
+            } else if (currentTop >= bottomBoundary) {
+                oriy *= -1
+                newTop += oriy - ran
+            } else
+                newTop += oriy
+        }
         when (imageView) {
             binding.imageView1 -> {
                 ori1x = orix
