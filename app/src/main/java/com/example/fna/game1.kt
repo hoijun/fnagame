@@ -1,7 +1,7 @@
 package com.example.fna
 
 import android.content.Context
-import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +13,7 @@ import com.example.fna.databinding.ActivityGame1Binding
 import com.example.fna.fnagamematerials.Companion.fnakeywords
 import java.lang.reflect.Field
 import kotlin.concurrent.timer
+import kotlin.math.abs
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -35,6 +36,7 @@ class game1 : AppCompatActivity() {
     private var ori3y = 5
     private var x = 0f
     private var y = 0f
+    private lateinit var imageViewlist : List<ImageView>
     private var ismoving1 = false
     private var ismoving2 = false
     private var ismoving3 = false
@@ -51,7 +53,7 @@ class game1 : AppCompatActivity() {
         music.runsong(number)
         x = binding.imageView1.translationX
         y = binding.imageView1.translationY
-
+        imageViewlist = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
         gaming() // 게임 시작
     }
 
@@ -88,8 +90,7 @@ class game1 : AppCompatActivity() {
         val fake2 = fnainfo(fnakeywords[randomkeysindex[2]], fnamemimages[randomkeysindex[2]])
 
         binding.keyword.text = key.getkeyword(randommemnameindex)
-        val imageViewarray = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
-        setimageviewindex(imageViewarray, randomimageviewarrayindex, randomimagesindex, listOf(key, fake1, fake2))
+        setimageviewindex(imageViewlist, randomimageviewarrayindex, randomimagesindex, listOf(key, fake1, fake2))
 
         if(solvequiznum in 1..10 && solvequiznum % 10 == 0){
             binding.keyword.text = fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(fakerandommemnameindex)
@@ -99,21 +100,21 @@ class game1 : AppCompatActivity() {
             if (solvequiznum > 20)
                 binding.keyword.text = fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(fakerandommemnameindex)
             Handler(Looper.getMainLooper()).postDelayed({
-                Glide.with(this).load(R.raw.itsme).into(imageViewarray[0])
-                Glide.with(this).load(R.raw.itsme).into(imageViewarray[1])
-                Glide.with(this).load(R.raw.itsme).into(imageViewarray[2])
+                Glide.with(this).load(R.raw.itsme).into(imageViewlist[0])
+                Glide.with(this).load(R.raw.itsme).into(imageViewlist[1])
+                Glide.with(this).load(R.raw.itsme).into(imageViewlist[2])
             }, 1000)
         }
 
-        imageViewarray[randomimageviewarrayindex[0]].setOnClickListener {
+        imageViewlist[randomimageviewarrayindex[0]].setOnClickListener {
             onCorrectImageClick()
         }
 
-        imageViewarray[randomimageviewarrayindex[1]].setOnClickListener {
+        imageViewlist[randomimageviewarrayindex[1]].setOnClickListener {
             onWrongImageClick()
         }
 
-        imageViewarray[randomimageviewarrayindex[2]].setOnClickListener {
+        imageViewlist[randomimageviewarrayindex[2]].setOnClickListener {
             onWrongImageClick()
         }
 
@@ -121,6 +122,10 @@ class game1 : AppCompatActivity() {
             onQuitGameClick()
         }
 
+        for(view in imageViewlist) {
+            view.layoutParams.height = resources.getDimension(R.dimen.size_100dp).toInt()
+            view.layoutParams.width = resources.getDimension(R.dimen.size_100dp).toInt()
+        }
         moveimage1()
         moveimage2()
         moveimage3()
@@ -279,6 +284,16 @@ class game1 : AppCompatActivity() {
         var newTop = currentTop
 
         val ran = Random(seed).nextInt(20)
+        val ran2 = Random(seed).nextInt(1..2)
+        val collisionlist = checkCollision(imageView)
+        val check = collisionlist[0] as Boolean
+        if (check) {
+            val other = collisionlist[1] as ImageView
+            if (abs(imageView.bottom - other.top) < 15 || abs(imageView.top - other.bottom) < 15)
+                oriy *= -1
+            else if (abs(imageView.left - other.right) < 15 || abs(imageView.right - other.left) < 15)
+                orix *= -1
+        }
 
         if (currentLeft <= 0) {
             orix *= -1
@@ -300,7 +315,6 @@ class game1 : AppCompatActivity() {
         else
             newTop += oriy
 
-
         when (imageView) {
             binding.imageView1 -> {
                 ori1x = orix
@@ -319,6 +333,26 @@ class game1 : AppCompatActivity() {
         }
         imageView.layout(newLeft, newTop, newLeft + imageView.width, newTop + imageView.height)
     }
+
+    private fun checkCollision(imageView: ImageView): List<Any>{
+        for (otherView in imageViewlist) {
+            if (otherView != imageView) {
+                if (Rect.intersects(imageView.getBounds(), otherView.getBounds())) {
+                    return listOf(true, otherView) // 충돌 발생
+                }
+            }
+        }
+        return listOf(false) // 충돌 없음
+    }
+
+    // ImageView의 경계를 반환하는 확장 함수
+    private fun ImageView.getBounds(): Rect {
+        val rect = Rect()
+        getDrawingRect(rect)
+        rect.offset(left, top)
+        return rect
+    }
+
 
 
     // 타이머 동작
