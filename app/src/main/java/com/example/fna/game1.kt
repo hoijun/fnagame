@@ -34,8 +34,12 @@ class game1 : AppCompatActivity() {
     private var ori2y = 5
     private var ori3x = 5
     private var ori3y = 5
-    private var x = 0f
-    private var y = 0f
+    private var x1 = 0f
+    private var y1 = 0f
+    private var x2 = 0f
+    private var y2 = 0f
+    private var x3 = 0f
+    private var y3 = 0f
     private lateinit var imageViewlist : List<ImageView>
     private var ismoving1 = false
     private var ismoving2 = false
@@ -51,9 +55,19 @@ class game1 : AppCompatActivity() {
         Glide.with(this).load(R.raw.dancinbbang).into(binding.dancebbang)
         val number = (songlist.indices).random()
         music.runsong(number)
-        x = binding.imageView1.translationX
-        y = binding.imageView1.translationY
+        x1 = binding.imageView1.translationX
+        y1 = binding.imageView1.translationY
+        x2 = binding.imageView2.translationX
+        y2 = binding.imageView2.translationY
+        x3 = binding.imageView3.translationX
+        y3 = binding.imageView3.translationY
         imageViewlist = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
+        ori1x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori1y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori2x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori2y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori3x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori3y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
         gaming() // 게임 시작
     }
 
@@ -139,8 +153,12 @@ class game1 : AppCompatActivity() {
     }
 
     private fun onCorrectImageClick() {
-        binding.imageView1.translationX = x
-        binding.imageView1.translationY = y
+        binding.imageView1.translationX = x1
+        binding.imageView1.translationY = y1
+        binding.imageView2.translationX = x2
+        binding.imageView2.translationY = y2
+        binding.imageView3.translationX = x3
+        binding.imageView3.translationY = y3
         game1timer.gettimer().cancel()
         solvequiznum++
         gaming()
@@ -194,8 +212,12 @@ class game1 : AppCompatActivity() {
     }
 
     override fun onPause() {
-        binding.imageView1.translationX = x
-        binding.imageView1.translationY = y
+        binding.imageView1.translationX = x1
+        binding.imageView1.translationY = y1
+        binding.imageView2.translationX = x2
+        binding.imageView2.translationY = y2
+        binding.imageView3.translationX = x3
+        binding.imageView3.translationY = y3
         super.onPause()
         if (ismoving1) {
             ismoving1 = false
@@ -275,6 +297,7 @@ class game1 : AppCompatActivity() {
             }
         }, 1)
     }
+
     private fun moveimagecondition(imageView: ImageView, tempx : Int, tempy : Int, seed : Long) {
         var orix = tempx
         var oriy = tempy
@@ -291,6 +314,7 @@ class game1 : AppCompatActivity() {
         val check = collisionlist[0] as Boolean
         var collsiontop: Boolean
         var collsionleft: Boolean
+
         if (check) {
             collsiontop = false
             collsionleft = false
@@ -306,29 +330,26 @@ class game1 : AppCompatActivity() {
                 oriy *= -1
             else if (collsionleft)
                 orix *= -1
+        }
+
+        if (currentLeft <= 0) {
+            orix *= -1
+            newLeft += orix + ran
+        } else if (currentLeft >= rightBoundary) {
+            orix *= -1
+            newLeft += orix - ran
+        } else
             newLeft += orix
+
+        if (currentTop <= 0) {
+            oriy *= -1
+            newTop += oriy + ran
+        } else if (currentTop >= bottomBoundary) {
+            oriy *= -1
+            newTop += oriy - ran
+        } else
             newTop += oriy
-        }
 
-        if (!check) {
-            if (currentLeft <= 0) {
-                orix *= -1
-                newLeft += orix + ran
-            } else if (currentLeft >= rightBoundary) {
-                orix *= -1
-                newLeft += orix - ran
-            } else
-                newLeft += orix
-
-            if (currentTop <= 0) {
-                oriy *= -1
-                newTop += oriy + ran
-            } else if (currentTop >= bottomBoundary) {
-                oriy *= -1
-                newTop += oriy - ran
-            } else
-                newTop += oriy
-        }
 
         when (imageView) {
             binding.imageView1 -> {
@@ -366,7 +387,7 @@ class game1 : AppCompatActivity() {
         rect.offset(left, top)
         return rect
     }
-    
+
     // 타이머 동작
      fun funTimer(delay: Long, acti: Context) {
         game1timer.settimer(timer(initialDelay = delay, period = 1000) {
