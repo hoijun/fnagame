@@ -308,8 +308,6 @@ class game1 : AppCompatActivity() {
         var newLeft = currentLeft
         var newTop = currentTop
 
-        val ran = Random(seed).nextInt(20)
-        val ran2 = Random(seed).nextInt(1..2)
         val collisionlist = checkCollision(imageView)
         val check = collisionlist[0] as Boolean
         var collsiontop: Boolean
@@ -332,25 +330,14 @@ class game1 : AppCompatActivity() {
                 orix *= -1
         }
 
-        if (currentLeft <= 0) {
+        if (currentLeft <= 0 || currentLeft >= rightBoundary)
             orix *= -1
-            newLeft += orix + ran
-        } else if (currentLeft >= rightBoundary) {
-            orix *= -1
-            newLeft += orix - ran
-        } else
-            newLeft += orix
 
-        if (currentTop <= 0) {
+        if (currentTop <= 0 || currentTop >= bottomBoundary)
             oriy *= -1
-            newTop += oriy + ran
-        } else if (currentTop >= bottomBoundary) {
-            oriy *= -1
-            newTop += oriy - ran
-        } else
-            newTop += oriy
 
-
+        newLeft += orix
+        newTop += oriy
         when (imageView) {
             binding.imageView1 -> {
                 ori1x = orix
