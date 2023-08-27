@@ -67,4 +67,5 @@
         <item>@drawable/jiheon2</item>
         <item>@drawable/jiheon3</item>
     </array>
+    <string name="title_activity_game2">game2</string>
 </resources>

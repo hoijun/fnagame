@@ -5,24 +5,25 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.fna.databinding.ActivityGame1Binding
 import com.example.fna.fnagamematerials.Companion.fnakeywords
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.lang.reflect.Field
 import kotlin.concurrent.timer
 import kotlin.math.abs
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 
 private var game1timer = timer()
 private lateinit var binding: ActivityGame1Binding
-private var moveHandler1: Handler? = null
-private var moveHandler2: Handler? = null
-private var moveHandler3: Handler? = null
 
 class game1 : AppCompatActivity() {
     private val songlist: Array<out Field> = R.raw::class.java.fields
@@ -44,6 +45,7 @@ class game1 : AppCompatActivity() {
     private var ismoving1 = false
     private var ismoving2 = false
     private var ismoving3 = false
+    private val job1 = Job()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,12 +62,12 @@ class game1 : AppCompatActivity() {
         x3 = binding.imageView3.translationX
         y3 = binding.imageView3.translationY
         imageViewlist = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
-        ori1x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
-        ori1y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
-        ori2x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
-        ori2y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
-        ori3x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
-        ori3y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -5 else 5
+        ori1x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+        ori1y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+        ori2x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+        ori2y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+        ori3x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+        ori3y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         gaming() // 게임 시작
     }
 
@@ -126,9 +128,12 @@ class game1 : AppCompatActivity() {
                     view.layoutParams.height = resources.getDimension(R.dimen.size_100dp).toInt()
                     view.layoutParams.width = resources.getDimension(R.dimen.size_100dp).toInt()
                 }
-                moveimage1()
-                moveimage2()
-                moveimage3()
+                CoroutineScope(Dispatchers.Main + job1).launch {
+                    delay(100)
+                    moveimage1()
+                    moveimage2()
+                    moveimage3()
+                }
             }
             if (solvequiznum == 100) {
                 game1timer.gettimer().cancel() // 타이머 중지
@@ -236,23 +241,10 @@ class game1 : AppCompatActivity() {
         binding.imageView3.translationX = x3
         binding.imageView3.translationY = y3
         super.onPause()
-        if (ismoving1) {
-            ismoving1 = false
-            moveHandler1?.removeCallbacksAndMessages(null)
-            moveHandler1 = null
-        }
-
-        if (ismoving2) {
-            ismoving2 = false
-            moveHandler2?.removeCallbacksAndMessages(null)
-            moveHandler2 = null
-        }
-
-        if (ismoving3) {
-            ismoving3 = false
-            moveHandler3?.removeCallbacksAndMessages(null)
-            moveHandler3 = null
-        }
+        ismoving1 = false
+        ismoving2 = false
+        ismoving3 = false
+        job1.cancel()
         if (music.getplayer().isPlaying) {
             music.getplayer().pause();
             music.setismediaplayerpaused(true)
@@ -269,6 +261,7 @@ class game1 : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        job1.cancel()
         music.getplayer().stop();
         music.getplayer().release();
     }
@@ -276,42 +269,34 @@ class game1 : AppCompatActivity() {
     private fun moveimage1() {
         if (ismoving1) return
         ismoving1 = true
-        moveHandler1 = Handler(Looper.getMainLooper())
-        moveHandler1?.postDelayed(object : Runnable {
-            override fun run() {
-                runOnUiThread {
-                    moveimagecondition(binding.imageView1, ori1x, ori1y, System.currentTimeMillis())
-                    moveHandler1?.postDelayed(this, 3)
-                }
+        CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                moveimagecondition(binding.imageView1, ori1x, ori1y, System.currentTimeMillis())
+                delay(3)
             }
-        }, 1)
+        }
     }
 
     private fun moveimage2() {
         if (ismoving2) return
         ismoving2 = true
-        moveHandler2 = Handler(Looper.getMainLooper())
-        moveHandler2?.postDelayed(object : Runnable {
-            override fun run() {
-                runOnUiThread {
-                    moveimagecondition(binding.imageView2, ori2x, ori2y, System.currentTimeMillis())
-                    moveHandler2?.postDelayed(this, 3)
-                }
+        CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                moveimagecondition(binding.imageView2, ori2x, ori2y, System.currentTimeMillis())
+                delay(3)
             }
-        }, 1)
+        }
     }
+
     private fun moveimage3() {
         if (ismoving3) return
         ismoving3 = true
-        moveHandler3 = Handler(Looper.getMainLooper())
-        moveHandler3?.postDelayed(object : Runnable {
-            override fun run() {
-                runOnUiThread {
-                    moveimagecondition(binding.imageView3, ori3x, ori3y, System.currentTimeMillis())
-                    moveHandler3?.postDelayed(this, 3)
-                }
+        CoroutineScope(Dispatchers.Main).launch {
+            while (true) {
+                moveimagecondition(binding.imageView3, ori3x, ori3y, System.currentTimeMillis())
+                delay(3)
             }
-        }, 1)
+        }
     }
 
     private fun moveimagecondition(imageView: ImageView, tempx : Int, tempy : Int, seed : Long) {
@@ -406,7 +391,7 @@ class game1 : AppCompatActivity() {
     // 타이머 동작
      fun funTimer(delay: Long, acti: Context) {
         game1timer.settimer(timer(initialDelay = delay, period = 1000) {
-            runOnUiThread {
+            CoroutineScope(Dispatchers.Main).launch {
                 // 시간이 0이되면 타이머 중지하고 다이얼로그 실행
                 if (game1timer.getdefaultsecond() == 0) {
                     game1timer.gettimer().cancel()
