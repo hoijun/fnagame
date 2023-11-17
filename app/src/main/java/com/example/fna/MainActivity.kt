@@ -11,7 +11,7 @@ import java.lang.reflect.Field
 
 
 class MainActivity () : AppCompatActivity() {
-    private lateinit var binding:ActivityMainBinding
+    private lateinit var binding : ActivityMainBinding
     private var backPressedTime : Long = 0
     private val songlist: Array<out Field> = R.raw::class.java.fields
     private var music = Music(this)

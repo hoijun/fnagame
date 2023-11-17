@@ -8,10 +8,12 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.bumptech.glide.Glide
+import com.example.fna.databinding.ActivityGame1Binding
 import com.example.fna.databinding.ActivityMydialogBinding
 
-class mydialog(context: Context) : Dialog(context) {
+class quitgame1dialog(context: Context, game1Binding: ActivityGame1Binding) : Dialog(context) {
     private lateinit var binding: ActivityMydialogBinding
+    private var game1binding = game1Binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +33,16 @@ class mydialog(context: Context) : Dialog(context) {
 
         binding.btnyes.setOnClickListener{
             dismiss()
-            game1().getgame1timer().gettimer().cancel()
+            timer.mytimer.cancel()
             val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택 창으로 이동
         }
 
         binding.btnno.setOnClickListener {
             dismiss() // 다이얼로그 닫음
-            game1().getgame1timer().setdefaultsecond(game1().getgame1timer().getnowsecond())// 타이머의 남은 시간 저장
-            game1().getgame1timer().gettimer().cancel() // 타이머 중지
-            game1().funTimer(500, this.context) // 저장한 남은 시간으로 다시 타이머 시작
+            timer.setdefaultsecond(timer.getnowsecond())// 타이머의 남은 시간 저장
+            timer.gettimer().cancel() // 타이머 중지
+            timer.game1Timer(500, this.context, game1binding) // 저장한 남은 시간으로 다시 타이머 시작
         }
     }
 

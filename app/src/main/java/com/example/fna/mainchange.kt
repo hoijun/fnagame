@@ -1,9 +1,8 @@
 package com.example.fna
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TableLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.example.fna.databinding.ActivityMainchangeBinding
 import com.google.android.material.tabs.TabLayoutMediator

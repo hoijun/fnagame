@@ -28,18 +28,19 @@
             android:id="@+id/imageView4"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="100dp"
             android:layout_marginStart="30dp"
             android:src="@drawable/rrom"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
+
         <android.widget.Button
             android:id="@+id/btnselectgame"
             android:layout_width="250dp"
             android:layout_height="80dp"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="180dp"
             android:background="@drawable/roundbutton"
             android:fontFamily="@font/dot"
             android:text="게임 시작"
@@ -49,22 +50,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
-
-        <android.widget.Button
-            android:id="@+id/btnimgae"
-            android:layout_width="250dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="156dp"
-            android:background="@drawable/roundbutton"
-            android:fontFamily="@font/dot"
-            android:text="그림 보기"
-            android:textSize="45sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/btnselectgame"
             tools:ignore="MissingConstraints" />
 
         <ImageView

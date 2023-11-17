@@ -17,10 +17,10 @@
             android:label="@string/title_activity_game2"
             android:theme="@style/Theme.Fna" />
         <activity
-            android:name=".mydialog2"
+            android:name=".wronganswerdialog"
             android:exported="false" />
         <activity
-            android:name=".mydialog"
+            android:name=".quitgame1dialog"
             android:exported="false" />
         <activity
             android:name=".game1"

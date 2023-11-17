@@ -1,6 +1,5 @@
 package com.example.fna
 
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
@@ -13,19 +12,15 @@ import com.example.fna.fnagamematerials.Companion.fnakeywords
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.reflect.Field
-import kotlin.concurrent.timer
 import kotlin.math.abs
 import kotlin.random.Random
 
 
-private var game1timer = timer()
-private lateinit var binding: ActivityGame1Binding
-
 class game1 : AppCompatActivity() {
+    private lateinit var binding: ActivityGame1Binding
     private val songlist: Array<out Field> = R.raw::class.java.fields
     private var music = Music(this)
     private var solvequiznum = 0
@@ -52,22 +47,28 @@ class game1 : AppCompatActivity() {
         setContentView(R.layout.activity_game1)
         binding = ActivityGame1Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
         Glide.with(this).load(R.raw.dancinbbang).into(binding.dancebbang)
+
         val number = (songlist.indices).random()
         music.runsong(number)
+
         x1 = binding.imageView1.translationX
         y1 = binding.imageView1.translationY
         x2 = binding.imageView2.translationX
         y2 = binding.imageView2.translationY
         x3 = binding.imageView3.translationX
         y3 = binding.imageView3.translationY
+
         imageViewlist = listOf(binding.imageView1, binding.imageView2, binding.imageView3)
+
         ori1x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         ori1y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         ori2x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         ori2y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         ori3x = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
         ori3y = if (Random(System.currentTimeMillis()).nextInt(2) == 0) -3 else 3
+
         gaming() // 게임 시작
     }
 
@@ -87,8 +88,8 @@ class game1 : AppCompatActivity() {
 
         binding.solvedquiz.text = "맞힌 문제: $solvequiznum"
 
-        game1timer.setdefaultsecond(3)
-        funTimer(0, this)
+        timer.setdefaultsecond(3)
+        timer.game1Timer(0, this, binding)
 
         val randomkeysindex = getrandomnodup(mutableListOf(), 3, 8)
         val randomimagesindex = getrandomdup(mutableListOf(), 3, 2)
@@ -104,6 +105,7 @@ class game1 : AppCompatActivity() {
         val fake2 = fnainfo(fnakeywords[randomkeysindex[2]], fnamemimages[randomkeysindex[2]])
 
         binding.keyword.text = key.getkeyword(randommemnameindex)
+
         setimageviewindex(
             imageViewlist,
             randomimageviewarrayindex,
@@ -136,8 +138,8 @@ class game1 : AppCompatActivity() {
                 }
             }
             if (solvequiznum == 100) {
-                game1timer.gettimer().cancel() // 타이머 중지
-                val customdialog = mydialog3(this)
+                timer.mytimer.cancel() // 타이머 중지
+                val customdialog = cleardialog(this)
                 customdialog.show() // 다이얼로그 실행
             }
             Handler(Looper.getMainLooper()).postDelayed({
@@ -146,9 +148,6 @@ class game1 : AppCompatActivity() {
                 Glide.with(this).load(R.raw.itsme).into(imageViewlist[2])
             }, 1000)
         }
-
-
-
 
         imageViewlist[randomimageviewarrayindex[0]].setOnClickListener {
             onCorrectImageClick()
@@ -181,22 +180,22 @@ class game1 : AppCompatActivity() {
         binding.imageView2.translationY = y2
         binding.imageView3.translationX = x3
         binding.imageView3.translationY = y3
-        game1timer.gettimer().cancel()
+        timer.mytimer.cancel()
         solvequiznum++
         gaming()
     }
 
     private fun onWrongImageClick() {
-        game1timer.gettimer().cancel()
-        val customdialog2 = mydialog2(this,"오답!")
+        timer.mytimer.cancel()
+        val customdialog2 = wronganswerdialog(this,"오답!")
         customdialog2.show()
     }
 
     private fun onQuitGameClick() {
-        game1timer.setnowsecond(
-            game1timer.getdefaultsecond()) // 타이머 남은 시간 저장
-        game1timer.gettimer().cancel() // 타이머 중지
-        val customdialog = mydialog(this)
+        timer.setnowsecond(
+            timer.getdefaultsecond()) // 타이머 남은 시간 저장
+        timer.gettimer().cancel() // 타이머 중지
+        val customdialog = quitgame1dialog(this, binding)
         customdialog.show() // 다이얼로그 실행
     }
 
@@ -218,15 +217,11 @@ class game1 : AppCompatActivity() {
 
     // 종료 버튼이랑 동일
     override fun onBackPressed() {
-        game1timer.setnowsecond(
-            game1timer.getdefaultsecond())
-        game1timer.gettimer().cancel()
-        val customdialog = mydialog(this)
+        timer.setnowsecond(
+            timer.getdefaultsecond())
+        timer.gettimer().cancel()
+        val customdialog = quitgame1dialog(this, binding)
         customdialog.show()
-    }
-
-    fun getgame1timer(): timer {
-        return game1timer
     }
 
     fun getsolvenum(): Int {
@@ -325,6 +320,7 @@ class game1 : AppCompatActivity() {
                 collisionleft = true
 
             if ((collisiontop && collisionleft) || (!collisiontop && !collisionleft))
+
             else if (collisiontop) {
                 oriy *= -1
                 collisionDetected = true
@@ -386,25 +382,5 @@ class game1 : AppCompatActivity() {
         getDrawingRect(rect)
         rect.offset(left, top)
         return rect
-    }
-
-    // 타이머 동작
-     fun funTimer(delay: Long, acti: Context) {
-        game1timer.settimer(timer(initialDelay = delay, period = 1000) {
-            CoroutineScope(Dispatchers.Main).launch {
-                // 시간이 0이되면 타이머 중지하고 다이얼로그 실행
-                if (game1timer.getdefaultsecond() == 0) {
-                    game1timer.gettimer().cancel()
-                    val customdialog2 = mydialog2(acti, "시간 종료!")
-                    customdialog2.show()
-                    binding.texttimer.text = "시간: 0"
-                }
-                else {
-                    // 시간을 1초씩 줄임
-                    binding.texttimer.text = "시간: ${game1timer.getdefaultsecond()}"
-                    game1timer.decsecond()
-                }
-            }
-        })
     }
 }

@@ -2,22 +2,15 @@ package com.example.fna
 
 import android.app.ActionBar.LayoutParams
 import android.app.Dialog
-import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Binder
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
 import com.example.fna.databinding.ActivityMydialog2Binding
-import java.security.cert.CertPathValidatorException.Reason
-import java.util.*
 
-class mydialog2(context: Context, reason: String) : Dialog(context) {
+class wronganswerdialog(context: Context, reason: String) : Dialog(context) {
     private lateinit var binding: ActivityMydialog2Binding
     private var endreason = reason // 오답
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +33,14 @@ class mydialog2(context: Context, reason: String) : Dialog(context) {
 
         binding.btnregame.setOnClickListener{
             dismiss()
-            game1().getgame1timer().gettimer().cancel()
+            timer.gettimer().cancel()
             val intent = Intent(this.context, game1::class.java)
             this.context.startActivity(intent) // 게임 재시작
         }
 
         binding.btnend.setOnClickListener {
             dismiss()
-            game1().getgame1timer().gettimer().cancel()
+            timer.gettimer().cancel()
             val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택창으로 이동
         }

@@ -10,7 +10,7 @@ import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.example.fna.databinding.ActivityMydialog3Binding
 
-class mydialog3(context: Context) : Dialog(context) {
+class cleardialog(context: Context) : Dialog(context) {
     private lateinit var binding: ActivityMydialog3Binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,7 @@ class mydialog3(context: Context) : Dialog(context) {
 
         binding.btnyes.setOnClickListener {
             dismiss()
-            game1().getgame1timer().gettimer().cancel()
+            timer.gettimer().cancel()
             val intent = Intent(this.context, mainchange::class.java)
             this.context.startActivity(intent) // 게임 선택창으로 이동
         }
