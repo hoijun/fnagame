@@ -113,19 +113,19 @@ class game1 : AppCompatActivity() {
             listOf(key, fake1, fake2)
         )
 
-        if (solvequiznum in 1..30 && solvequiznum % 10 == 0) {
+        if (solvequiznum in 1..5 && solvequiznum % 5 == 0) {
             binding.keyword.text = fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(
                 fakerandommemnameindex
             )
         }
 
-        if (solvequiznum in 21..100 && solvequiznum % 10 == 0) {
-            if (solvequiznum > 50)
+        if (solvequiznum in 6..30 && solvequiznum % 5 == 0) {
+            if (solvequiznum > 10)
                 binding.keyword.text =
                     fake1.getkeyword(randommemnameindex) + " 말고 " + key.getkeyword(
                         fakerandommemnameindex
                     )
-            if (solvequiznum == 71) {
+            if (solvequiznum == 15) {
                 for(view in imageViewlist) {
                     view.layoutParams.height = resources.getDimension(R.dimen.size_100dp).toInt()
                     view.layoutParams.width = resources.getDimension(R.dimen.size_100dp).toInt()
@@ -137,7 +137,7 @@ class game1 : AppCompatActivity() {
                     moveimage3()
                 }
             }
-            if (solvequiznum == 100) {
+            if (solvequiznum == 30) {
                 timer.mytimer.cancel() // 타이머 중지
                 val customdialog = cleardialog(this)
                 customdialog.show() // 다이얼로그 실행
